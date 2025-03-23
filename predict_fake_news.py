@@ -6,7 +6,7 @@ import streamlit as st
 MODEL_PATH = "fake_news_model.pt"
 TOKENIZER = BertTokenizer.from_pretrained("bert-base-uncased")
 
-# ✅ Load Trained Model
+#Load Trained Model
 def load_model():
     model = BertForSequenceClassification.from_pretrained("bert-base-uncased", num_labels=2)
     model.load_state_dict(torch.load(MODEL_PATH, map_location=torch.device("cpu")))
@@ -15,15 +15,15 @@ def load_model():
 
 model = load_model()
 
-# ✅ Predict Fake or Real News
+# Predict Fake or Real News
 def predict_fake_news(text):
     inputs = TOKENIZER(text, return_tensors="pt", truncation=True, padding=True, max_length=512)
     with torch.no_grad():
         outputs = model(**inputs)
     prediction = torch.argmax(outputs.logits).item()
-    return "🛑 Fake News" if prediction == 1 else "✅ Real News"
+    return "Fake News" if prediction == 1 else "Real News"
 
-# ✅ Fetch Live News from API
+# Fetch Live News from API
 def fetch_latest_news(api_key):
     url = f"https://newsapi.org/v2/top-headlines?country=us&apiKey={api_key}"
     response = requests.get(url)
@@ -33,8 +33,8 @@ def fetch_latest_news(api_key):
         st.error(f"Error fetching news: {response.json().get('message', 'Unknown error')}")
         return []
 
-# ✅ Streamlit UI
-st.title("📰 Real-Time Fake News Detection System")
+# Streamlit UI
+st.title("Real-Time Fake News Detection System")
 
 st.sidebar.header("Enter News Headline or Article")
 news_input = st.sidebar.text_area("Paste news text here:")
@@ -63,8 +63,8 @@ if st.sidebar.button("Get Latest News"):
                 result = predict_fake_news(news_text)
 
                 st.write(f"🔹 **{title}**")
-                st.write(f"📌 **Source:** {source}")
-                st.write(f"🎯 **Prediction:** {result}")
+                st.write(f"**Source:** {source}")
+                st.write(f" **Prediction:** {result}")
                 st.write("---")
         else:
             st.write("No news articles found.")
